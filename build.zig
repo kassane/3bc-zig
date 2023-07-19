@@ -37,7 +37,7 @@ fn libHello(b: *std.Build, properties: BuildProperties) *std.Build.Step.Compile 
     const repo = GitRepoStep.create(b, .{
         .url = "https://github.com/RodrigoDornelles/3bc-lang.git",
         .branch = "develop-wip-wip",
-        .sha = "9464896bec714c73132ce077ac9169ed1964b05e",
+        .sha = "c562e9852989784dea1caaa12afe188bc983800d",
         .fetch_enabled = true,
     });
 
@@ -58,7 +58,7 @@ fn libHello(b: *std.Build, properties: BuildProperties) *std.Build.Step.Compile 
     lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/legacy" }));
     lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/i18n" }));
     lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/ds" }));
-    lib.addCSourceFiles(&.{
+    lib.addCSourceFiles(&[_][]const u8{
         "dep/3bc-lang.git/src/alu/alu_none.c",
         "dep/3bc-lang.git/src/bus/bus_cfg_hello.c",
         "dep/3bc-lang.git/src/bus/bus_cpu_hello.c",
@@ -73,57 +73,57 @@ fn libHello(b: *std.Build, properties: BuildProperties) *std.Build.Step.Compile 
         "dep/3bc-lang.git/src/ds/ds_prog_array.c",
         "dep/3bc-lang.git/src/i18n/i18n_no-ne.c",
         "dep/3bc-lang.git/src/interpreter/interpreter_mock.c",
-        "dep/3bc-lang.git/src/sys/sys_posix_output.c",
         "dep/3bc-lang.git/src/sys/sys_common_mock.c",
         "dep/3bc-lang.git/src/util/util_itos.c",
+        if (lib.target.isWindows()) "dep/3bc-lang.git/src/sys/sys_windows_output.c" else "dep/3bc-lang.git/src/sys/sys_posix_output.c",
     }, &.{
         "-Wall",
         "-Wextra",
-        "-Wshadow",
+        "-std=gnu99",
     });
     lib.linkLibC();
     lib.step.dependOn(&repo.step);
     return lib;
 }
 
-const src = &.{
-    // "dep/3bc-lang.git/src/alu/alu_math.c",
-    // "dep/3bc-lang.git/src/bus/bus_cfg_lang.c",
-    // "dep/3bc-lang.git/src/bus/bus_cpu_lang.c",
-    // "dep/3bc-lang.git/src/bus/bus_sys_lang.c",
-    // "dep/3bc-lang.git/src/cpu/cpu_jump.c",
-    // "dep/3bc-lang.git/src/cpu/cpu_math.c",
-    // "dep/3bc-lang.git/src/cpu/cpu_memory.c",
-    // "dep/3bc-lang.git/src/cpu/cpu_procedure.c",
-    // "dep/3bc-lang.git/src/cpu/cpu_sleep.c",
-    // "dep/3bc-lang.git/src/ds/ds_ram_array.c",
-    // "dep/3bc-lang.git/src/i18n/i18n_en-us.c",
-    // "dep/3bc-lang.git/src/interpreter/interpreter_parser.c",
-    // "dep/3bc-lang.git/src/interpreter/interpreter_readln.c",
-    // "dep/3bc-lang.git/src/interpreter/interpreter_syntax.c",
-    // "dep/3bc-lang.git/src/interpreter/interpreter_ticket.c",
-    // "dep/3bc-lang.git/src/interpreter/interpreter_tokens.c",
-    // "dep/3bc-lang.git/src/legacy/driver_accumulator.c",
-    // "dep/3bc-lang.git/src/legacy/driver_custom.c",
-    // "dep/3bc-lang.git/src/legacy/driver_gpio.c",
-    // "dep/3bc-lang.git/src/legacy/driver_idle.c",
-    // "dep/3bc-lang.git/src/legacy/driver_mode.c",
-    // "dep/3bc-lang.git/src/legacy/driver_power.c",
-    // "dep/3bc-lang.git/src/legacy/driver_program.c",
-    // "dep/3bc-lang.git/src/legacy/driver_tty.c",
-    // "dep/3bc-lang.git/src/legacy/ds_hypervisor_darray.c",
-    // "dep/3bc-lang.git/src/legacy/ds_label_hash.c",
-    // "dep/3bc-lang.git/src/legacy/ds_memory_llrbt.c",
-    // "dep/3bc-lang.git/src/legacy/ds_procedure_lifo.c",
-    // "dep/3bc-lang.git/src/legacy/driver_memory.c",
-    // "dep/3bc-lang.git/src/legacy/ds_program_fifo.c",
-    // "dep/3bc-lang.git/src/sys/sys_common_pexa.c",
-    // "dep/3bc-lang.git/src/sys/sys_conio_output.c",
-    // "dep/3bc-lang.git/src/sys/sys_nes_output.c",
-    // "dep/3bc-lang.git/src/sys/sys_windows_output.c",
-    // "dep/3bc-lang.git/src/util/util_djb2.c",
-    // "dep/3bc-lang.git/src/util/util_stoi.c",
-};
+// const src = &.{
+// "dep/3bc-lang.git/src/alu/alu_math.c",
+// "dep/3bc-lang.git/src/bus/bus_cfg_lang.c",
+// "dep/3bc-lang.git/src/bus/bus_cpu_lang.c",
+// "dep/3bc-lang.git/src/bus/bus_sys_lang.c",
+// "dep/3bc-lang.git/src/cpu/cpu_jump.c",
+// "dep/3bc-lang.git/src/cpu/cpu_math.c",
+// "dep/3bc-lang.git/src/cpu/cpu_memory.c",
+// "dep/3bc-lang.git/src/cpu/cpu_procedure.c",
+// "dep/3bc-lang.git/src/cpu/cpu_sleep.c",
+// "dep/3bc-lang.git/src/ds/ds_ram_array.c",
+// "dep/3bc-lang.git/src/i18n/i18n_en-us.c",
+// "dep/3bc-lang.git/src/interpreter/interpreter_parser.c",
+// "dep/3bc-lang.git/src/interpreter/interpreter_readln.c",
+// "dep/3bc-lang.git/src/interpreter/interpreter_syntax.c",
+// "dep/3bc-lang.git/src/interpreter/interpreter_ticket.c",
+// "dep/3bc-lang.git/src/interpreter/interpreter_tokens.c",
+// "dep/3bc-lang.git/src/legacy/driver_accumulator.c",
+// "dep/3bc-lang.git/src/legacy/driver_custom.c",
+// "dep/3bc-lang.git/src/legacy/driver_gpio.c",
+// "dep/3bc-lang.git/src/legacy/driver_idle.c",
+// "dep/3bc-lang.git/src/legacy/driver_mode.c",
+// "dep/3bc-lang.git/src/legacy/driver_power.c",
+// "dep/3bc-lang.git/src/legacy/driver_program.c",
+// "dep/3bc-lang.git/src/legacy/driver_tty.c",
+// "dep/3bc-lang.git/src/legacy/ds_hypervisor_darray.c",
+// "dep/3bc-lang.git/src/legacy/ds_label_hash.c",
+// "dep/3bc-lang.git/src/legacy/ds_memory_llrbt.c",
+// "dep/3bc-lang.git/src/legacy/ds_procedure_lifo.c",
+// "dep/3bc-lang.git/src/legacy/driver_memory.c",
+// "dep/3bc-lang.git/src/legacy/ds_program_fifo.c",
+// "dep/3bc-lang.git/src/sys/sys_common_pexa.c",
+// "dep/3bc-lang.git/src/sys/sys_conio_output.c",
+// "dep/3bc-lang.git/src/sys/sys_nes_output.c",
+// "dep/3bc-lang.git/src/sys/sys_windows_output.c",
+// "dep/3bc-lang.git/src/util/util_djb2.c",
+// "dep/3bc-lang.git/src/util/util_stoi.c",
+// };
 
 const BuildProperties = struct {
     target: std.zig.CrossTarget,
