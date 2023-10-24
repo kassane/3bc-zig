@@ -6,14 +6,13 @@ This zig binding is designed for testing interoperability between both languages
 
 ## Whats is [3BC language](https://3bc-lang.org/)?
 
-Low-level language, tiny virtual machine, intermediate representation, embeddable, easy for beginners. (Friendly Punched cards)
-
+Low-level language, tiny virtual machine, intermediate representation, embeddable, easy for beginners. 
 
 ## Requirements
 
-- zig [v0.11 or higher](https://ziglang.org/download)
+- zig [v0.12 or higher](https://ziglang.org/download)
 - git for download 3bc-lang dependency
 
 ## Acknowledgements
 
-- Rodrigo Dornelles is author of 3BC language.
+- **Rodrigo Dornelles** is author of 3BC language.

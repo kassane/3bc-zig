@@ -46,40 +46,48 @@ fn libHello(b: *std.Build, properties: BuildProperties) *std.Build.Step.Compile 
         .target = properties.target,
         .optimize = properties.optimize,
     });
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src" }));
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/alu" }));
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/cpu" }));
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/driver" }));
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/bus" }));
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/sys" }));
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/util" }));
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/interpreter" }));
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/types" }));
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/legacy" }));
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/i18n" }));
-    lib.addIncludePath(b.pathJoin(&.{ repo.path, "src/ds" }));
-    lib.addCSourceFiles(&[_][]const u8{
-        "dep/3bc-lang.git/src/alu/alu_none.c",
-        "dep/3bc-lang.git/src/bus/bus_cfg_hello.c",
-        "dep/3bc-lang.git/src/bus/bus_cpu_hello.c",
-        "dep/3bc-lang.git/src/bus/bus_sys_hello.c",
-        "dep/3bc-lang.git/src/cpu/cpu_common.c",
-        "dep/3bc-lang.git/src/cpu/cpu_string.c",
-        "dep/3bc-lang.git/src/driver/driver_cpu.c",
-        "dep/3bc-lang.git/src/driver/driver_error.c",
-        "dep/3bc-lang.git/src/driver/driver_gc.c",
-        "dep/3bc-lang.git/src/driver/driver_interrupt.c",
-        "dep/3bc-lang.git/src/driver/driver_stack.c",
-        "dep/3bc-lang.git/src/ds/ds_prog_array.c",
-        "dep/3bc-lang.git/src/i18n/i18n_no-ne.c",
-        "dep/3bc-lang.git/src/interpreter/interpreter_mock.c",
-        "dep/3bc-lang.git/src/sys/sys_common_mock.c",
-        "dep/3bc-lang.git/src/util/util_itos.c",
-        if (lib.target.isWindows()) "dep/3bc-lang.git/src/sys/sys_windows_output.c" else "dep/3bc-lang.git/src/sys/sys_posix_output.c",
-    }, &.{
-        "-Wall",
-        "-Wextra",
-        "-std=gnu99",
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src" }) });
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src/alu" }) });
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src/cpu" }) });
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src/driver" }) });
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src/bus" }) });
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src/sys" }) });
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src/util" }) });
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src/interpreter" }) });
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src/types" }) });
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src/legacy" }) });
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src/i18n" }) });
+    lib.addIncludePath(.{ .path = b.pathJoin(&.{ repo.path, "src/ds" }) });
+    lib.addCSourceFiles(.{
+        .files = &[_][]const u8{
+            b.pathJoin(&.{ repo.path, "src/alu/alu_none.c" }),
+            b.pathJoin(&.{ repo.path, "src/bus/bus_cfg_hello.c" }),
+            b.pathJoin(&.{ repo.path, "src/bus/bus_cpu_hello.c" }),
+            b.pathJoin(&.{ repo.path, "src/bus/bus_sys_hello.c" }),
+            b.pathJoin(&.{ repo.path, "src/cpu/cpu_common.c" }),
+            b.pathJoin(&.{ repo.path, "src/cpu/cpu_string.c" }),
+            b.pathJoin(&.{ repo.path, "src/driver/driver_cpu.c" }),
+            b.pathJoin(&.{ repo.path, "src/driver/driver_error.c" }),
+            b.pathJoin(&.{ repo.path, "src/driver/driver_gc.c" }),
+            b.pathJoin(&.{ repo.path, "src/driver/driver_interrupt.c" }),
+            b.pathJoin(&.{ repo.path, "src/driver/driver_stack.c" }),
+            b.pathJoin(&.{ repo.path, "src/ds/ds_prog_array.c" }),
+            b.pathJoin(&.{ repo.path, "src/i18n/i18n_no-ne.c" }),
+            b.pathJoin(&.{ repo.path, "src/interpreter/interpreter_mock.c" }),
+            b.pathJoin(&.{ repo.path, "src/sys/sys_common_mock.c" }),
+            b.pathJoin(&.{ repo.path, "src/util/util_itos.c" }),
+            if (lib.target.isWindows())
+                b.pathJoin(&.{ repo.path, "src/sys/sys_windows_output.c" })
+            else
+                b.pathJoin(&.{ repo.path, "src/sys/sys_posix_output.c" }),
+        },
+        .flags = &.{
+            "-Wall",
+            "-Wextra",
+            "-Weverything",
+            "-std=gnu99",
+            // "-Werror",
+        },
     });
     lib.linkLibC();
     lib.step.dependOn(&repo.step);
@@ -87,42 +95,42 @@ fn libHello(b: *std.Build, properties: BuildProperties) *std.Build.Step.Compile 
 }
 
 // const src = &.{
-// "dep/3bc-lang.git/src/alu/alu_math.c",
-// "dep/3bc-lang.git/src/bus/bus_cfg_lang.c",
-// "dep/3bc-lang.git/src/bus/bus_cpu_lang.c",
-// "dep/3bc-lang.git/src/bus/bus_sys_lang.c",
-// "dep/3bc-lang.git/src/cpu/cpu_jump.c",
-// "dep/3bc-lang.git/src/cpu/cpu_math.c",
-// "dep/3bc-lang.git/src/cpu/cpu_memory.c",
-// "dep/3bc-lang.git/src/cpu/cpu_procedure.c",
-// "dep/3bc-lang.git/src/cpu/cpu_sleep.c",
-// "dep/3bc-lang.git/src/ds/ds_ram_array.c",
-// "dep/3bc-lang.git/src/i18n/i18n_en-us.c",
-// "dep/3bc-lang.git/src/interpreter/interpreter_parser.c",
-// "dep/3bc-lang.git/src/interpreter/interpreter_readln.c",
-// "dep/3bc-lang.git/src/interpreter/interpreter_syntax.c",
-// "dep/3bc-lang.git/src/interpreter/interpreter_ticket.c",
-// "dep/3bc-lang.git/src/interpreter/interpreter_tokens.c",
-// "dep/3bc-lang.git/src/legacy/driver_accumulator.c",
-// "dep/3bc-lang.git/src/legacy/driver_custom.c",
-// "dep/3bc-lang.git/src/legacy/driver_gpio.c",
-// "dep/3bc-lang.git/src/legacy/driver_idle.c",
-// "dep/3bc-lang.git/src/legacy/driver_mode.c",
-// "dep/3bc-lang.git/src/legacy/driver_power.c",
-// "dep/3bc-lang.git/src/legacy/driver_program.c",
-// "dep/3bc-lang.git/src/legacy/driver_tty.c",
-// "dep/3bc-lang.git/src/legacy/ds_hypervisor_darray.c",
-// "dep/3bc-lang.git/src/legacy/ds_label_hash.c",
-// "dep/3bc-lang.git/src/legacy/ds_memory_llrbt.c",
-// "dep/3bc-lang.git/src/legacy/ds_procedure_lifo.c",
-// "dep/3bc-lang.git/src/legacy/driver_memory.c",
-// "dep/3bc-lang.git/src/legacy/ds_program_fifo.c",
-// "dep/3bc-lang.git/src/sys/sys_common_pexa.c",
-// "dep/3bc-lang.git/src/sys/sys_conio_output.c",
-// "dep/3bc-lang.git/src/sys/sys_nes_output.c",
-// "dep/3bc-lang.git/src/sys/sys_windows_output.c",
-// "dep/3bc-lang.git/src/util/util_djb2.c",
-// "dep/3bc-lang.git/src/util/util_stoi.c",
+// b.pathJoin(&.{ repo.path, "src/alu/alu_math.c"}),
+// b.pathJoin(&.{ repo.path, "src/bus/bus_cfg_lang.c"}),
+// b.pathJoin(&.{ repo.path, "src/bus/bus_cpu_lang.c"}),
+// b.pathJoin(&.{ repo.path, "src/bus/bus_sys_lang.c"}),
+// b.pathJoin(&.{ repo.path, "src/cpu/cpu_jump.c"}),
+// b.pathJoin(&.{ repo.path, "src/cpu/cpu_math.c"}),
+// b.pathJoin(&.{ repo.path, "src/cpu/cpu_memory.c"}),
+// b.pathJoin(&.{ repo.path, "src/cpu/cpu_procedure.c"}),
+// b.pathJoin(&.{ repo.path, "src/cpu/cpu_sleep.c"}),
+// b.pathJoin(&.{ repo.path, "src/ds/ds_ram_array.c"}),
+// b.pathJoin(&.{ repo.path, "src/i18n/i18n_en-us.c"}),
+// b.pathJoin(&.{ repo.path, "src/interpreter/interpreter_parser.c"}),
+// b.pathJoin(&.{ repo.path, "src/interpreter/interpreter_readln.c"}),
+// b.pathJoin(&.{ repo.path, "src/interpreter/interpreter_syntax.c"}),
+// b.pathJoin(&.{ repo.path, "src/interpreter/interpreter_ticket.c"}),
+// b.pathJoin(&.{ repo.path, "src/interpreter/interpreter_tokens.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/driver_accumulator.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/driver_custom.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/driver_gpio.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/driver_idle.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/driver_mode.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/driver_power.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/driver_program.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/driver_tty.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/ds_hypervisor_darray.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/ds_label_hash.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/ds_memory_llrbt.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/ds_procedure_lifo.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/driver_memory.c"}),
+// b.pathJoin(&.{ repo.path, "src/legacy/ds_program_fifo.c"}),
+// b.pathJoin(&.{ repo.path, "src/sys/sys_common_pexa.c"}),
+// b.pathJoin(&.{ repo.path, "src/sys/sys_conio_output.c"}),
+// b.pathJoin(&.{ repo.path, "src/sys/sys_nes_output.c"}),
+// b.pathJoin(&.{ repo.path, "src/sys/sys_windows_output.c"}),
+// b.pathJoin(&.{ repo.path, "src/util/util_djb2.c"}),
+// b.pathJoin(&.{ repo.path, "src/util/util_stoi.c"}),
 // };
 
 const BuildProperties = struct {
